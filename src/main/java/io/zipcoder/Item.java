@@ -1,5 +1,7 @@
 package io.zipcoder;
 
+import java.util.HashMap;
+
 public class Item {
     private String name;
     private Double price;
@@ -16,6 +18,7 @@ public class Item {
      * @param expiration
      */
     public Item(String name, Double price, String type, String expiration){
+
         this.name = name;
         this.price = price;
         this.type = type;
@@ -45,4 +48,6 @@ public class Item {
     public String toString(){
         return "name:" + name + " price:" + price + " type:" + type + " expiration:" + expiration;
     }
+
+
 }

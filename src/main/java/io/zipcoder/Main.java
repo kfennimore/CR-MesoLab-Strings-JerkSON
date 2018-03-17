@@ -2,18 +2,27 @@ package io.zipcoder;
 
 import org.apache.commons.io.IOUtils;
 
+import java.util.ArrayList;
+import java.util.Map;
+
 
 public class Main {
 
-    public String readRawDataToString() throws Exception{
+    public static ItemParser itemParser = new ItemParser();
+
+    public String readRawDataToString() throws Exception {
         ClassLoader classLoader = getClass().getClassLoader();
         String result = IOUtils.toString(classLoader.getResourceAsStream("RawData.txt"));
         return result;
     }
 
-    public static void main(String[] args) throws Exception{
+    public static void main(String[] args) throws Exception {
         String output = (new Main()).readRawDataToString();
-        System.out.println(output);
+        ArrayList<String> temp = itemParser.parseRawDataIntoStringArray(output);
+        itemParser.addItemToList(temp);
+        System.out.println(itemParser.printGroceryList());
+
         // TODO: parse the data in output into items, and display to console.
     }
 }
+
