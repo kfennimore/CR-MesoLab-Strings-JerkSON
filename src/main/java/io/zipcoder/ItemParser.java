@@ -1,17 +1,16 @@
 package io.zipcoder;
 
+
+
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import static java.lang.Double.NaN;
-import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 
 public class ItemParser {
@@ -22,6 +21,7 @@ public class ItemParser {
     int exception = 0;
 
     public ItemParser() {
+
         groceryMap = new HashMap<>();
     }
 
@@ -67,7 +67,6 @@ public class ItemParser {
     }
 
     public int priceCount(ArrayList<Item> item, Double price) {
-
         int count = 0;
         //loop through items and look for the price to see how many times it is there
         for(int i = 0; i < item.size(); i++) {
@@ -198,7 +197,7 @@ public class ItemParser {
 
     public void printErrorToFile(ItemParseException e) throws FileNotFoundException {
         PrintWriter writer = new PrintWriter("/Users/karoushafennimore/Dev/PainfulAfternoon/src/main/resources/errors.txt");
-        writer.write(e.toString());
+        writer.write(Arrays.asList(e.getStackTrace()).stream().map(Object::toString).collect(Collectors.joining("\n")));
         writer.close();
     }
 
