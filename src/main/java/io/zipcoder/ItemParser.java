@@ -13,8 +13,9 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 
-public class ItemParser {
-    private Main main = new Main();
+public final class ItemParser {
+
+    private PrintWriter writer ;
     private Map<String,ArrayList<Item>> groceryMap;
 
     //counts exceptions
@@ -23,6 +24,11 @@ public class ItemParser {
     public ItemParser() {
 
         groceryMap = new HashMap<>();
+        try {
+            writer= new PrintWriter("/Users/karoushafennimore/Dev/PainfulAfternoon/src/main/resources/errors.txt");
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
     }
 
     public String printGroceryList(){
@@ -82,9 +88,7 @@ public class ItemParser {
     }
 
     public ArrayList<String> parseRawDataIntoStringArray(String rawData){
-        String stringPattern = "##";
-        ArrayList<String> response = splitStringWithRegexPattern(stringPattern , rawData);
-        return response;
+        return splitStringWithRegexPattern("##" , rawData);
     }
 
     private void incrementList(Map<String, ArrayList<Item>> myMap, Item myItem) {
@@ -119,7 +123,6 @@ public class ItemParser {
     }
 
     public Item parseStringIntoItem(String rawItem) throws ItemParseException {
-
         String itemName = findName(rawItem);
         Double itemPrice = itemPrice(rawItem);
         String itemType = itemType(rawItem);
@@ -196,9 +199,12 @@ public class ItemParser {
     }
 
     public void printErrorToFile(ItemParseException e) throws FileNotFoundException {
-        PrintWriter writer = new PrintWriter("/Users/karoushafennimore/Dev/PainfulAfternoon/src/main/resources/errors.txt");
+        //getting entire stack report on the errors that I am getting.
         writer.write(Arrays.asList(e.getStackTrace()).stream().map(Object::toString).collect(Collectors.joining("\n")));
-        writer.close();
+
     }
 
+    public void flushExceptionsToFile() {
+        writer.close();
+    }
 }
