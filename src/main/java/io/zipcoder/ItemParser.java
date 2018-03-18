@@ -2,12 +2,15 @@ package io.zipcoder;
 
 
 
+import jdk.nashorn.internal.objects.Global;
+
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -24,6 +27,7 @@ public final class ItemParser {
     public ItemParser() {
 
         groceryMap = new HashMap<>();
+        //add printWriter in constructor so that there is only ONE
         try {
             writer= new PrintWriter("/Users/karoushafennimore/Dev/PainfulAfternoon/src/main/resources/errors.txt");
         } catch (FileNotFoundException e) {
@@ -36,18 +40,14 @@ public final class ItemParser {
         StringBuilder sb = new StringBuilder();
         //for every new entry - put the Key and how many times you saw it
         for (Map.Entry<String , ArrayList<Item> > item : groceryMap.entrySet()) {
-            sb.append("\nname: ");
-            sb.append(String.format("%9s", item.getKey().substring(0, 1).toUpperCase() + item.getKey().substring(1)));
-            sb.append("\t\t\tseen:  " + item.getValue().size() + "  times\n");
-            sb.append("===============" + "\t\t\t" + "===============\n");
+            sb.append(String.format("\nname: %9s", item.getKey().substring(0, 1).toUpperCase() + item.getKey().substring(1)));
+            sb.append("\t\t\tseen:  " + item.getValue().size() + "  times\n" + "===============" + "\t\t\t" + "===============\n");
 
             ArrayList<Double> tempList = uniquePrices(item);
 
             for(int i = 0; i < tempList.size(); i++) {
-                sb.append("Price:");
-                sb.append(String.format("%9s", tempList.get(i)));
-                sb.append("\t\t\tseen:  " + priceCount(item.getValue(), tempList.get(i)) + "  times\n");
-                sb.append("---------------" + "\t\t\t" + "---------------\n");
+                sb.append(String.format("Price: %8s", tempList.get(i)));
+                sb.append("\t\t\tseen:  " + priceCount(item.getValue(), tempList.get(i)) + "  times\n---------------" + "\t\t\t" + "---------------\n");
             }
         }
         sb.append("\nErrors" + "\t\t\t\t\tseen:  " + exception + "  times\n");
@@ -200,7 +200,7 @@ public final class ItemParser {
 
     public void printErrorToFile(ItemParseException e) throws FileNotFoundException {
         //getting entire stack report on the errors that I am getting.
-        writer.write(Arrays.asList(e.getStackTrace()).stream().map(Object::toString).collect(Collectors.joining("\n")));
+        writer.write(Arrays.stream(e.getStackTrace()).map(Object::toString).collect(Collectors.joining("\n")));
 
     }
 
